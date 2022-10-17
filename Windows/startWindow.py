@@ -2,6 +2,8 @@ from tkinter import *
 from tkinter import filedialog, scrolledtext
 import os
 
+from measurementTable import measurementTable
+
 
 class StartWindow:
     __root = Tk()
@@ -14,10 +16,13 @@ class StartWindow:
         self.__root.geometry("800x600")
         self.__root.update()
 
+        self.__image_names = []
+
         self.__build_menu_bar_gui()
         self.__build_labels_gui()
         self.__build_image_table_gui()
         self.__root.mainloop()
+
 
     def __build_menu_bar_gui(self):
         menu_bar = Menu(self.__root, tearoff=False)
@@ -32,9 +37,11 @@ class StartWindow:
     def __import_images(self):
         image_folder = filedialog.askdirectory()
         for image in os.listdir(image_folder):
+            self.__image_names.append(image)
             b = Button(text=image, width=15, height=2)
             self.__imported_images_table.window_create("end", window=b)
             self.__imported_images_table.insert("end", "\n")
+        self.__build_length_table_gui()
 
     def __build_image_table_gui(self):
         self.__imported_images_table = scrolledtext.ScrolledText(self.__root, width=15,
@@ -43,10 +50,14 @@ class StartWindow:
         self.__imported_images_table.configure(state="disabled")
         self.__imported_images_table.pack(side="left", pady=65, padx=10)
 
-    # def __build_length_table_gui(self):
     def __build_labels_gui(self):
         Label(self.__root, text="Imported Images").place(x=25, y=20)
         Label(self.__root, text="File -> Import Images -> Select FOLDER which contains images").place(relx=0.5, rely=0.5, anchor="center")
+
+    def __build_length_table_gui(self):
+        print(self.__image_names)
+        measure_table = measurementTable(self.__image_names)
+        measure_table.pandas_table_to_display()
     def get_window_name(self):
         return self.__window_name
 
