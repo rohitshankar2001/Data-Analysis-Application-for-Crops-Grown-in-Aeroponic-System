@@ -1,5 +1,3 @@
-from tkinter import *
-from tkinter import ttk
 from Windows.startWindow import StartWindow
 
 if __name__ == '__main__':

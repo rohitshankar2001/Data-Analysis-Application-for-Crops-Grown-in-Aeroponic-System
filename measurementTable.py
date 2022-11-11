@@ -14,5 +14,8 @@ class measurementTable:
     def add_column(self, column_name):
         self.data_frame[column_name] = ''
 
+    def add_row_value(self, row, column_name, value):
+        self.data_frame._set_value(row, column_name, value)
+
     def pandas_table_to_display(self):
         print(self.data_frame)

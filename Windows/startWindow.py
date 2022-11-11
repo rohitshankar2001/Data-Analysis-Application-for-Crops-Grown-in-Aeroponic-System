@@ -3,6 +3,7 @@ from tkinter import filedialog, scrolledtext
 import os
 
 from measurementTable import measurementTable
+from imageAnalysisWindow import imageAnalysisWindow
 
 
 class StartWindow:
@@ -23,7 +24,6 @@ class StartWindow:
         self.__build_image_table_gui()
         self.__root.mainloop()
 
-
     def __build_menu_bar_gui(self):
         menu_bar = Menu(self.__root, tearoff=False)
         file_menu = Menu(menu_bar, tearoff=False)
@@ -34,12 +34,16 @@ class StartWindow:
 
         self.__root.config(menu=menu_bar)
 
+    @staticmethod
+    def __open_analysis_window():
+        i = imageAnalysisWindow()
+
     def __import_images(self):
         image_folder = filedialog.askdirectory()
         for image in os.listdir(image_folder):
             self.__image_names.append(image)
-            b = Button(text=image, width=15, height=2)
-            self.__imported_images_table.window_create("end", window=b)
+            file_button = Button(text=image, width=15, height=2, command=self.__open_analysis_window)
+            self.__imported_images_table.window_create("end", window=file_button)
             self.__imported_images_table.insert("end", "\n")
         self.__build_length_table_gui()
 
@@ -52,14 +56,13 @@ class StartWindow:
 
     def __build_labels_gui(self):
         Label(self.__root, text="Imported Images").place(x=25, y=20)
-        Label(self.__root, text="File -> Import Images -> Select FOLDER which contains images").place(relx=0.5, rely=0.5, anchor="center")
+        Label(self.__root, text="File -> Import Images -> Select FOLDER which contains images").place(relx=0.5,
+                                                                                                      rely=0.5,
+                                                                                                      anchor="center")
 
     def __build_length_table_gui(self):
         print(self.__image_names)
         measure_table = measurementTable(self.__image_names)
+        measure_table.add_column("test")
+        measure_table.add_row_value(0, "test", 5.32)
         measure_table.pandas_table_to_display()
-    def get_window_name(self):
-        return self.__window_name
-
-    def set_window_name(self, new_window_name):
-        self.__window_name = new_window_name
