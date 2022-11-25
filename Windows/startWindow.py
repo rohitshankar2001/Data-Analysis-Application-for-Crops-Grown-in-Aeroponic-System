@@ -3,7 +3,7 @@ from tkinter import filedialog, scrolledtext
 import os
 
 from measurementTable import measurementTable
-from imageAnalysisWindow import imageAnalysisWindow
+from Windows.imageAnalysisWindow import imageAnalysisWindow
 
 
 class StartWindow:
@@ -35,14 +35,16 @@ class StartWindow:
         self.__root.config(menu=menu_bar)
 
     @staticmethod
-    def __open_analysis_window():
-        i = imageAnalysisWindow()
+    def __open_analysis_window(file_button, directory):
+        i = imageAnalysisWindow(file_button['text'], directory)
 
     def __import_images(self):
         image_folder = filedialog.askdirectory()
         for image in os.listdir(image_folder):
             self.__image_names.append(image)
-            file_button = Button(text=image, width=15, height=2, command=self.__open_analysis_window)
+            file_button = Button(text=image, width=15, height=2)
+            file_button.config(command=lambda file_button=file_button: self.__open_analysis_window(file_button, image_folder))
+
             self.__imported_images_table.window_create("end", window=file_button)
             self.__imported_images_table.insert("end", "\n")
         self.__build_length_table_gui()
@@ -59,7 +61,6 @@ class StartWindow:
         Label(self.__root, text="File -> Import Images -> Select FOLDER which contains images").place(relx=0.5,
                                                                                                       rely=0.5,
                                                                                                       anchor="center")
-
     def __build_length_table_gui(self):
         print(self.__image_names)
         measure_table = measurementTable(self.__image_names)
