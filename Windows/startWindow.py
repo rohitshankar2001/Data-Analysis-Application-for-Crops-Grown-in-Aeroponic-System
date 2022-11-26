@@ -8,6 +8,7 @@ from Windows.imageAnalysisWindow import imageAnalysisWindow
 
 class StartWindow:
     __root = Tk()
+    measure_table = measurementTable()
 
     def __init__(self, window_name="DefaultName"):
         self.__window_name = window_name
@@ -58,12 +59,12 @@ class StartWindow:
 
     def __build_labels_gui(self):
         Label(self.__root, text="Imported Images").place(x=25, y=20)
-        Label(self.__root, text="File -> Import Images -> Select FOLDER which contains images").place(relx=0.5,
-                                                                                                      rely=0.5,
-                                                                                                      anchor="center")
+        Label(self.__root, text="File -> Import Images -> Select FOLDER which contains images").place(relx=0.5, rely=0.5, anchor="center")
+
     def __build_length_table_gui(self):
         print(self.__image_names)
-        measure_table = measurementTable(self.__image_names)
-        measure_table.add_column("test")
-        measure_table.add_row_value(0, "test", 5.32)
-        measure_table.pandas_table_to_display()
+        self.measure_table.add_images(self.__image_names)
+        self.measure_table.add_column("ReferenceLength")
+        self.measure_table.add_row_value(0, "ReferenceLength", 5.32)
+        self.measure_table.pandas_table_to_display()
+

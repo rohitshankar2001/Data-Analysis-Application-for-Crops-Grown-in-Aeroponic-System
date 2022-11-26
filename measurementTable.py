@@ -7,8 +7,10 @@ from tkinter import *
 class measurementTable:
     data_frame = pd.DataFrame()
 
-    def __init__(self, file_names: list):
-        self.file_names = file_names
+    def __init__(self):
+        print("init")
+
+    def add_images(self, file_names: list):
         self.data_frame.insert(0,"File Names", file_names)
 
     def add_column(self, column_name):
