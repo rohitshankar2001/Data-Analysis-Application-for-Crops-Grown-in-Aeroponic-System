@@ -65,6 +65,6 @@ class StartWindow:
         print(self.__image_names)
         self.measure_table.add_images(self.__image_names)
         self.measure_table.add_column("ReferenceLength")
-        self.measure_table.add_row_value(0, "ReferenceLength", 5.32)
+        #self.measure_table.add_row_value(0, "ReferenceLength", 5.32)
         self.measure_table.pandas_table_to_display()
 
