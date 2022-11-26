@@ -21,7 +21,7 @@ class imageAnalysisWindow:
         __root.title(window_name)
         width = __root.winfo_screenwidth()
         height = __root.winfo_screenheight()
-        __root.geometry("%dx%d" % (width - 100, height - 100))
+        __root.geometry("%dx%d" % (1200,600))
 
         # Gives scrollbar to canvas. Made for larger images. Directly from stackoverflow post: https://stackoverflow.com/questions/7727804/tkinter-using-scrollbars-on-a-canvas
         frame = Frame(__root,width=300,height=300)
@@ -63,19 +63,16 @@ class imageAnalysisWindow:
 
     def __place_measurement_points(self, __root, canvas, column_name):
         messagebox.showinfo("Make Measurement", "Click at ends of measurement", parent=__root)
-        pp = pointPlacer(__root, canvas, column_name)
+        pp = pointPlacer(__root, canvas, column_name,self.window_name)
         pp.clear()
         pp.draw()
 
     def __add_column_buttons(self, __root,canvas):
         columns = startWindow.StartWindow.measure_table.data_frame.columns
         for i in range(1, len(columns)):
-            column_button = Button(__root, text=columns[i], width=40)
+            column_button = Button(canvas, text=columns[i], width=40)
             column_button.config(command=lambda column_button=column_button: self.__place_measurement_points(__root,canvas,column_button["text"]))
-            column_button.place(x=950, y=30 * i)
-
-    def add_reference(self, __root):
-        reference_unit = simpledialog.askstring(title="Enter Reference Unit", prompt="Enter Unit for Reference Length", parent=__root)
+            column_button.place(x=800, y=30 * i)
 
     def __build_menu_bar_gui(self, __root,canvas):
         menu_bar = Menu(__root, tearoff=False)
@@ -84,7 +81,6 @@ class imageAnalysisWindow:
         import_buttons = lambda: self.create_new_column(__root,canvas)
 
         file_menu.add_command(label="Create New Column", command=import_buttons)
-        file_menu.add_command(label="Add to existing Column", command=import_buttons)
 
         __root.config(menu=menu_bar)
 
