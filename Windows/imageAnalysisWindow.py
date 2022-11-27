@@ -23,7 +23,7 @@ class imageAnalysisWindow:
         height = __root.winfo_screenheight()
         __root.geometry("%dx%d" % (1200,600))
 
-        # Gives scrollbar to canvas. Made for larger images. Directly from stackoverflow post: https://stackoverflow.com/questions/7727804/tkinter-using-scrollbars-on-a-canvas
+        # Gives scrollbar to canvas. Made for larger images. From stackoverflow post: https://stackoverflow.com/questions/7727804/tkinter-using-scrollbars-on-a-canvas
         frame = Frame(__root,width=300,height=300)
         frame.pack(expand=True, fill=BOTH) #.grid(row=0,column=0)
         canvas = Canvas(frame,bg='#FFFFFF',width=1500,height=1500,scrollregion=(0,0,5000,5000))
@@ -50,20 +50,23 @@ class imageAnalysisWindow:
         canvas.old_coords = None
 
         self.__add_column_buttons(__root,canvas)
-        #self.get_mouse_coordinates(canvas)
         self.__build_menu_bar_gui(__root,canvas)
-        self.add_reference(__root)
         __root.mainloop()
 
     def create_new_column(self, __root,canvas):
         new_column_name = simpledialog.askstring(title="NEW COLUMN", prompt="Enter Name of Column",parent=__root)
         startWindow.StartWindow.measure_table.add_column(new_column_name)
-        startWindow.StartWindow.measure_table.pandas_table_to_display()
+        startWindow.StartWindow.measure_table.pandas_table_to_display(startWindow.StartWindow.tree)
         self.__add_column_buttons(__root,canvas)
 
     def __place_measurement_points(self, __root, canvas, column_name):
-        messagebox.showinfo("Make Measurement", "Click at ends of measurement", parent=__root)
-        pp = pointPlacer(__root, canvas, column_name,self.window_name)
+        is_scaled = True
+        if column_name == "Reference Length":
+            messagebox.showinfo("Make Measurement", "Click at ends of measurement", parent=__root)
+        else:
+            is_scaled = messagebox.askyesno("Question","Do you want value scaled with reference", parent=__root)
+            print(is_scaled)
+        pp = pointPlacer(__root, canvas, column_name,self.window_name,is_scaled)
         pp.clear()
         pp.draw()
 
@@ -79,9 +82,7 @@ class imageAnalysisWindow:
         file_menu = Menu(menu_bar, tearoff=False)
         menu_bar.add_cascade(label="File", menu=file_menu)
         import_buttons = lambda: self.create_new_column(__root,canvas)
-
         file_menu.add_command(label="Create New Column", command=import_buttons)
-
         __root.config(menu=menu_bar)
 
 

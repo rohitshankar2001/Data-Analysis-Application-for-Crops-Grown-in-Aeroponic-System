@@ -20,5 +20,24 @@ class measurementTable:
         i = self.data_frame[self.data_frame['File Names']==row_name].index.values
         self.data_frame._set_value(i[0], column_name, value)
 
-    def pandas_table_to_display(self):
+    def get_reference_value(self, row_name):
+        i = self.data_frame[self.data_frame['File Names']==row_name].index.values
+        return self.data_frame.loc[i[0],"Reference Length"]
+
+    def pandas_table_to_display(self, tree):
+        tree.pack()
+        tree.delete(*tree.get_children())
+        cols = list(self.data_frame.columns)
+
+        # Function to convert dataframe to tree view tkinter: https://stackoverflow.com/questions/57829917/how-to-display-pandas-dataframe-properly-using-tkinter
+        tree["columns"] = cols
+        for i in cols:
+            tree.column(i, anchor="w")
+            tree.heading(i, text=i, anchor='w')
+        for index, row in self.data_frame.iterrows():
+            tree.insert("",0,text=index,values=list(row))
+
         print(self.data_frame)
+
+    def export_as_csv(self,tree):
+        self.data_frame.to_csv()
