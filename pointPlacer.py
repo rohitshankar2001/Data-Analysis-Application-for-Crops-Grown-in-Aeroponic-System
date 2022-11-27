@@ -17,6 +17,7 @@ class pointPlacer:
         self.is_scaled = is_scaled
 
     def draw(self):
+        self.canvas.old_coords = None
         # Drawing function from: https://www.tutorialspoint.com/how-to-draw-a-line-following-mouse-coordinates-with-tkinter
         def draw_line(e):
             x, y = e.x, e.y
@@ -26,19 +27,21 @@ class pointPlacer:
                 line = self.canvas.create_line(x, y, x1, y1, width=5, tag=self.column_name.replace(" ", ""))
             self.canvas.old_coords = x, y
             if self.num_clicks > 1:
+                for b in self.canvas.winfo_children():
+                    b.configure(state = "enabled")
                 if self.column_name == "Reference Length":
                     self.add_to_measurement_table(self.calculate_distance(x, y, x1, y1))
                 elif self.is_scaled:
                     reference_scale = startWindow.StartWindow.measure_table.get_reference_value(self.window_name)
-                    if reference_scale is None:
+                    if reference_scale == "":
                         reference_scale = 1
                     self.add_to_measurement_table(self.calculate_distance(x, y, x1, y1)/reference_scale)
                 else:
                     self.add_to_measurement_table(self.calculate_distance(x, y, x1, y1))
                 startWindow.StartWindow.measure_table.pandas_table_to_display(startWindow.StartWindow.tree)
-                self.__root.unbind('<ButtonPress-1>')
+                self.canvas.unbind('<ButtonPress-1>')
                 self.canvas.old_coords = None
-        self.__root.bind('<ButtonPress-1>', draw_line)
+        self.canvas.bind('<ButtonPress-1>', draw_line)
 
     def clear(self):
         self.canvas.delete(self.column_name.replace(" ", ""))

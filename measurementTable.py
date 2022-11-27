@@ -14,6 +14,8 @@ class measurementTable:
         self.data_frame.insert(0,"File Names", file_names)
 
     def add_column(self, column_name):
+        if column_name in self.data_frame:
+            return
         self.data_frame[column_name] = ''
 
     def add_row_value(self, row_name, column_name, value):
@@ -39,5 +41,10 @@ class measurementTable:
 
         print(self.data_frame)
 
-    def export_as_csv(self,tree):
-        self.data_frame.to_csv()
+    def export_as_csv(self):
+        self.data_frame.to_csv("output.csv",index = False)
+
+    def import_as_csv(self,name,tree):
+        self.data_frame = pd.read_csv(name)
+        self.pandas_table_to_display(tree)
+        print(self.data_frame)

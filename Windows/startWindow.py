@@ -34,6 +34,12 @@ class StartWindow:
         import_images_command = lambda: self.__import_images()
         file_menu.add_command(label="Import Image Folder", command=import_images_command)
 
+        export_csv_command = lambda : measurementTable.export_as_csv(self.measure_table)
+        file_menu.add_command(label="Save/Export as csv", command=export_csv_command)
+
+        import_csv_command = lambda : measurementTable.import_as_csv(self.measure_table,"output.csv",self.tree)
+        file_menu.add_command(label="Load/Import as csv", command=import_csv_command)
+
         self.root.config(menu=menu_bar)
 
     @staticmethod
@@ -63,9 +69,11 @@ class StartWindow:
 
     def __build_length_table_gui(self, tree):
         print(self.__image_names)
-        self.measure_table.add_images(self.__image_names)
+        try:
+            self.measure_table.add_images(self.__image_names)
+        except:
+            print("already in")
         self.measure_table.add_column("Reference Length")
-        #self.measure_table.add_row_value("download.png", "Reference Length", 5.32)
         self.measure_table.pandas_table_to_display(tree)
 
 

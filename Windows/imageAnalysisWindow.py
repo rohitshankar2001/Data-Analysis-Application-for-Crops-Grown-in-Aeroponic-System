@@ -50,7 +50,7 @@ class imageAnalysisWindow:
         canvas.old_coords = None
 
         self.__add_column_buttons(__root,canvas)
-        self.__build_menu_bar_gui(__root,canvas)
+        self.build_menu_bar_gui(__root,canvas)
         __root.mainloop()
 
     def create_new_column(self, __root,canvas):
@@ -66,9 +66,15 @@ class imageAnalysisWindow:
         else:
             is_scaled = messagebox.askyesno("Question","Do you want value scaled with reference", parent=__root)
             print(is_scaled)
+
+        for b in canvas.winfo_children():
+            b.configure(state = "disabled")
+
+
         pp = pointPlacer(__root, canvas, column_name,self.window_name,is_scaled)
         pp.clear()
         pp.draw()
+
 
     def __add_column_buttons(self, __root,canvas):
         columns = startWindow.StartWindow.measure_table.data_frame.columns
@@ -77,7 +83,7 @@ class imageAnalysisWindow:
             column_button.config(command=lambda column_button=column_button: self.__place_measurement_points(__root,canvas,column_button["text"]))
             column_button.place(x=800, y=30 * i)
 
-    def __build_menu_bar_gui(self, __root,canvas):
+    def build_menu_bar_gui(self, __root,canvas):
         menu_bar = Menu(__root, tearoff=False)
         file_menu = Menu(menu_bar, tearoff=False)
         menu_bar.add_cascade(label="File", menu=file_menu)
