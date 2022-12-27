@@ -20,7 +20,9 @@ class pointPlacer:
         self.canvas.old_coords = None
         # Drawing function from: https://www.tutorialspoint.com/how-to-draw-a-line-following-mouse-coordinates-with-tkinter
         def draw_line(e):
-            x, y = e.x, e.y
+            x = self.canvas.canvasx(e.x)
+            y = self.canvas.canvasy(e.y)
+
             self.num_clicks += 1
             if self.canvas.old_coords:
                 x1, y1 = self.canvas.old_coords
@@ -28,9 +30,11 @@ class pointPlacer:
             self.canvas.old_coords = x, y
             if self.num_clicks > 1:
                 for b in self.canvas.winfo_children():
-                    b.configure(state = "enabled")
+                    b.configure(state="enabled")
+
                 if self.column_name == "Reference Length":
                     self.add_to_measurement_table(self.calculate_distance(x, y, x1, y1))
+                    print(str(x) + ", " + str(y) + " " + str(x1) + ", " + str(y1))
                 elif self.is_scaled:
                     reference_scale = startWindow.StartWindow.measure_table.get_reference_value(self.window_name)
                     if reference_scale == "":
@@ -38,15 +42,16 @@ class pointPlacer:
                     self.add_to_measurement_table(self.calculate_distance(x, y, x1, y1)/reference_scale)
                 else:
                     self.add_to_measurement_table(self.calculate_distance(x, y, x1, y1))
+
                 startWindow.StartWindow.measure_table.pandas_table_to_display(startWindow.StartWindow.tree)
-                self.canvas.unbind('<ButtonPress-1>')
+                self.__root.unbind('<ButtonPress-3>')
                 self.canvas.old_coords = None
-        self.canvas.bind('<ButtonPress-1>', draw_line)
+        self.__root.bind('<ButtonPress-3>', draw_line)
 
     def clear(self):
         self.canvas.delete(self.column_name.replace(" ", ""))
 
-    def calculate_distance(self, x1 , y1 , x2 , y2):
+    def calculate_distance(self, x1, y1, x2, y2):
         first_coordinate = [x1,y1]
         second_coordinate = [x2,y2]
         return math.dist(first_coordinate,second_coordinate)

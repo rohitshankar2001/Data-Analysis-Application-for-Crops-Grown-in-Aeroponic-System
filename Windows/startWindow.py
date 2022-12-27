@@ -3,7 +3,7 @@ from tkinter import filedialog, scrolledtext
 import os
 from tkinter.ttk import Treeview
 
-from measurementTable import measurementTable
+from Components.measurementTable import measurementTable
 from Windows.imageAnalysisWindow import imageAnalysisWindow
 
 
@@ -48,14 +48,15 @@ class StartWindow:
 
     def __import_images(self):
         image_folder = filedialog.askdirectory()
-        for image in os.listdir(image_folder):
-            self.__image_names.append(image)
-            file_button = Button(text=image, width=15, height=2)
-            file_button.config(command=lambda file_button=file_button: self.__open_analysis_window(file_button, image_folder))
-
-            self.__imported_images_table.window_create("end", window=file_button)
-            self.__imported_images_table.insert("end", "\n")
-        self.__build_length_table_gui(self.tree)
+        if image_folder != '':
+            for image in os.listdir(image_folder):
+                if image not in self.__image_names:
+                    self.__image_names.append(image)
+                    file_button = Button(text=image, width=15, height=2)
+                    file_button.config(command=lambda file_button=file_button: self.__open_analysis_window(file_button, image_folder))
+                    self.__imported_images_table.window_create("end", window=file_button)
+                    self.__imported_images_table.insert("end", "\n")
+            self.__build_length_table_gui(self.tree)
 
     def __build_image_table_gui(self):
         self.__imported_images_table = scrolledtext.ScrolledText(self.root, width=15, height=self.root.winfo_height())
@@ -69,10 +70,8 @@ class StartWindow:
 
     def __build_length_table_gui(self, tree):
         print(self.__image_names)
-        try:
-            self.measure_table.add_images(self.__image_names)
-        except:
-            print("already in")
+
+        self.measure_table.add_images(self.__image_names)
         self.measure_table.add_column("Reference Length")
         self.measure_table.pandas_table_to_display(tree)
 
