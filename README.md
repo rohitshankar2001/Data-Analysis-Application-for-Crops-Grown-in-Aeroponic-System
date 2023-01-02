@@ -16,3 +16,8 @@ Next, Click file Create New Length Column to measure roots. Click on newly creat
 
 Example image below shows refrence length, middle root, and right root measured. In previous window, the lengths are catalogued and can be exported to csv using file -> save csv <br>
 ![image](https://user-images.githubusercontent.com/115378538/210155917-8d18462c-6c88-469a-97b0-3e3e0b42be24.png)
+
+# Additional Program Features
+Calculate Length of Image with reference <br>
+Calculate Area of portion of image using flood fill algorithm <br>
+Export and Import CSV files to save progress <br>
